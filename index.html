@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming og historie - En platform om digitale historiske spil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Lys grå baggrund */
+            color: #1f2937; /* Mørkegrå tekst */
+            line-height: 1.65; /* Forbedret læsbarhed */
+        }
+        .hero-bg {
+            background-color: #3B82F6; /* Blå-600 for hero-sektion */
+            background-size: cover; /* Sikrer at billedet dækker området */
+            background-position: center; /* Centrerer billedet */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* Blødere afrundede hjørner */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Standard skygge */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden; /* Sikrer at indhold respekterer border-radius */
+            display: flex; /* Aktiverer flexbox for kortindhold */
+            flex-direction: column; /* Stabler indhold vertikalt */
+            position: relative; /* For positionering af anbefalings-badge */
+        }
+        .card-content {
+            flex-grow: 1; /* Tillader indhold at optage tilgængelig plads */
+            padding: 1.5rem; /* p-6 */
+            display: flex; /* Tilføjet for knapjustering */
+            flex-direction: column; /* Tilføjet for knapjustering */
+        }
+        .card-text-content { /* Ny klasse til at omkranse tekst og skubbe knap til bunden */
+            flex-grow: 1;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Større skygge ved hover */
+        }
+        .anbefaling-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #10B981; /* Emerald-500 */
+            color: white;
+            padding: 0.25rem 0.75rem; /* py-1 px-3 */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600; /* semibold */
+            border-bottom-left-radius: 0.5rem; /* rounded-bl-lg */
+            z-index: 10;
+        }
+        .nav-link {
+            padding: 0.625rem 1.25rem; /* py-2.5 px-5 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 500; /* medium */
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: #2563EB; /* Blå-700 for hover/aktiv */
+            color: white;
+        }
+        .btn-primary {
+            background-color: #3B82F6; /* Blå-600 */
+            color: white;
+            padding: 0.875rem 1.75rem; /* py-3.5 px-7 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* semibold */
+            transition: background-color 0.2s ease;
+            display: inline-block; /* Sikrer korrekt afstand og layout */
+        }
+        .btn-primary:hover {
+            background-color: #2563EB; /* Blå-700 */
+        }
+        .btn-secondary {
+            background-color: #6b7280; /* Grå-500 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 500; /* medium */
+            transition: background-color 0.2s ease;
+            display: inline-block;
+        }
+        .btn-secondary:hover {
+            background-color: #4b5563; /* Grå-600 */
+        }
+        .btn-explore {
+            background-color: #3B82F6;
+            color: white;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            display: inline-block;
+            margin-top: auto; /* Skubber knap til bunden af flex container (.card-content) */
+            align-self: center; /* Justerer knap til midten af tværaksen (horisontalt) */
+        }
+        .btn-explore:hover {
+            background-color: #2563EB;
+        }
+        .btn-external {
+            color: white;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            display: block;
+            text-align: center;
+        }
+        .btn-external.steam {
+             background-color: #1b2838;
+        }
+        .btn-external.steam:hover {
+            background-color: #2c4359;
+        }
+        .btn-external.g2a {
+            background-color: #fa5000;
+        }
+        .btn-external.g2a:hover {
+            background-color: #d84500;
+        }
+        .btn-read-more {
+            background-color: #E0E7FF;
+            color: #1E3A8A;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            display: inline-block;
+            margin-top: 0.75rem;
+            cursor: pointer;
+        }
+        .btn-read-more:hover {
+            background-color: #C7D2FE;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1E3A8A;
+            margin-bottom: 2rem;
+            text-transform: lowercase;
+        }
+        .section-title::first-letter {
+            text-transform: uppercase;
+        }
+        .sub-section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1E3A8A;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #DBEAFE;
+            padding-bottom: 0.5rem;
+            text-transform: lowercase;
+        }
+        .sub-section-title::first-letter {
+            text-transform: uppercase;
+        }
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1E3A8A;
+            margin-bottom: 0.75rem;
+            text-transform: lowercase;
+        }
+        .sidebar-title::first-letter {
+            text-transform: uppercase;
+        }
+
+        /* Anvend lige margener og orddeling på relevante brødtekstafsnit */
+        #om-projektet .grid div.text-lg p,    /* For "Om projektet" main paragraphs */
+        .om-mig-article .max-w-3xl p,        /* For "Om mig" section */
+        #gaming-kultur-industri .max-w-3xl p, /* For "Gaming kultur" section */
+        .dt-article p,                       /* For game detail long descriptions */
+        .foraeldre-dybdegaaende-article p,   /* For in-depth parents section */
+        .videre-laesning-article p {         /* For "Videre læsning" paragraphs, if any */
+            text-align: justify;
+            -webkit-hyphens: auto; /* Safari */
+            -ms-hyphens: auto;    /* IE/Edge */
+            hyphens: auto;        /* Standard */
+        }
+
+        /* Generel margin for p-tags i specifikke artikelsektioner, hvis ikke håndteret af space-y */
+        .intro-gaming-text p,
+        .foraeldre-dybdegaaende-article p,
+        .om-mig-article p,
+        .videre-laesning-article p,
+        #gaming-kultur-industri .max-w-3xl p, /* Sikrer margin for den nye sektion også */
+        .dt-article p {
+            margin-bottom: 1rem;
+        }
+
+        .foraeldre-dybdegaaende-article ul, .om-mig-article ul, .videre-laesning-article ul, .dt-article ul {
+            list-style-position: inside;
+            padding-left: 0.5rem;
+            margin-bottom: 1rem; /* Sørg for at ul også har bundmargin */
+        }
+        .foraeldre-dybdegaaende-article ul li, .om-mig-article ul li, .videre-laesning-article ul li, .dt-article ul li {
+            margin-bottom: 0.5rem;
+        }
+        .resource-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            background-color: #E0E7FF;
+            color: #1E3A8A;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        .resource-link:hover {
+            background-color: #C7D2FE;
+            color: #1D4ED8;
+        }
+        .footer {
+            background-color: #111827;
+            color: #d1d5db;
+        }
+
+        #mobileMenu.hidden, .main-section.hidden, #foraeldre-dybdegaaende.hidden, #spil-detalje-visning.hidden, .hidden-text, #om-mig-sektion.hidden {
+            display: none;
+        }
+        #mobileMenu.block, .main-section.block, #foraeldre-dybdegaaende.block, #spil-detalje-visning.block, .expanded-text, #om-mig-sektion.block {
+            display: block;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 0.5rem; /* Afrundede hjørner */
+            margin-bottom: 1.5rem; /* Afstand under video */
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .rating-circle {
+            display: inline-block;
+            width: 1.25rem; /* Størrelse på cirkel */
+            height: 1.25rem; /* Størrelse på cirkel */
+            border-radius: 50%; /* Gør den rund */
+        }
+
+        /* Specifik styling for spil-detalje artikler */
+        .dt-article h4 { /* Overskrift niveau 4 i detaljevisning */
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* semibold */
+            color: #1E40AF; /* blue-800 */
+            margin-top: 1.75rem; /* mt-7 */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .dt-article h5 { /* Overskrift niveau 5 i detaljevisning */
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* semibold */
+            color: #1D4ED8; /* blue-700 */
+            margin-top: 1.25rem; /* mt-5 */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .dt-article strong { /* Fremhævet tekst */
+            color: #1E3A8A; /* Mørkere blå for kontrast */
+        }
+        .dt-box { /* Informationsboks i detaljevisning */
+            background-color: #EFF6FF; /* Meget lys blå baggrund */
+            border-left: 4px solid #3B82F6; /* Blå venstrebord */
+            padding: 1rem; /* Indvendig afstand */
+            margin-top: 1rem;
+            margin-bottom: 1.5rem; /* Afstand omkring boksen */
+            border-radius: 0.375rem; /* Afrundede hjørner */
+        }
+        .dt-box h5 { /* Overskrift i informationsboks */
+            margin-top:0;
+            color: #1E40AF; /* Mørkere blå for overskrift */
+        }
+
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#forside" class="text-2xl font-bold text-blue-600 hover:text-blue-800 transition-colors">Gaming & historie</a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex md:ml-10 md:space-x-2 lg:space-x-4" id="desktopMenu">
+                    <a href="#forside" class="nav-link active">Forside</a>
+                    <a href="#om-projektet" class="nav-link">Om projektet</a>
+                    <a href="#for-foraeldre" class="nav-link">For forældre</a>
+                    <a href="#for-undervisere" class="nav-link">For undervisere</a>
+                    <a href="#spilbibliotek" class="nav-link">Spilbibliotek</a>
+                    <a href="#blog" class="nav-link">Blog & forum</a>
+                    <a href="#ressourcer" class="nav-link">Fordybelse & Viden</a>
+                    <a href="#kontakt" class="nav-link">Kontakt</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobileMenuButton" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Åbn hovedmenu</span>
+                        <!-- Ikon for åben menu (hamburger) -->
+                        <svg id="iconOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                        <!-- Ikon for lukket menu (kryds) -->
+                        <svg id="iconClose" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#forside" class="block nav-link active text-gray-700 hover:bg-blue-500 hover:text-white">Forside</a>
+                <a href="#om-projektet" class="block nav-link text-gray-700 hover:bg-blue-500 hover:text-white">Om projektet</a>
+                <a href="#for-foraeldre" class="block nav-link text-gray-700 hover:bg-blue-500 hover:text-white">For forældre</a>
+                <a href="#for-undervisere" class="block nav-link text-gray-700 hover:bg-blue-500 hover:text-white">For undervisere</a>
+                <a href="#spilbibliotek" class="block nav-link text-gray-700 hover:bg-blue-500 hover:text-white">Spilbibliotek</a>
+                <a href="#blog" class="block nav-link text-gray-700 hover:bg-blue-500 hover:text-white">Blog & forum</a>
+                <a href="#ressourcer" class="block nav-link text-gray-700 hover:bg-blue-500 hover:text-white">Fordybelse & Viden</a>
+                <a href="#kontakt" class="block nav-link text-gray-700 hover:bg-blue-500 hover:text-white">Kontakt</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Sektion -->
+    <header id="forside" class="hero-bg text-white py-24 md:py-36">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg">Udforsk fortiden gennem digitale spil</h1>
+            <p class="text-lg md:text-xl mb-10 max-w-3xl mx-auto drop-shadow-md">En platform for forældre, undervisere og alle med interesse for, hvordan historiske spil former vores forståelse af fortiden og tilbyder unikke læringsmuligheder.</p>
+            <a href="#om-projektet" class="btn-primary text-lg">Lær mere</a>
+        </div>
+    </header>
+
+    <!-- Hovedindhold Container (til at skjule/vise sektioner) -->
+    <div id="main-content-container">
+        <!-- Om Projektet Sektion -->
+        <section id="om-projektet" class="main-section py-12 md:py-16 container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="section-title text-center">Om projektet</h2>
+            <div class="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <img src="https://placehold.co/600x450/60A5FA/FFFFFF?text=Gaming+%26+Historie&font=inter" alt="Visuel repræsentation af gaming og historie" class="rounded-lg shadow-xl w-full h-auto object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x450/60A5FA/FFFFFF?text=Billede+utilg%C3%A6ngeligt&font=inter';">
+                </div>
+                <div class="text-lg text-gray-700 space-y-5 order-1 md:order-2">
+                    <p>Velkommen til! Her på siden finder du information og analyser om digitale historiske spil og gaming generelt. Vi dykker ned i, hvordan spil kan bruges til at forstå fortiden, og hvilke muligheder og udfordringer der ligger i krydsfeltet mellem historie og spil.</p>
+                    <p>Målet er at bygge bro mellem den viden, der findes på universiteterne, og den interesse, som mange almindelige mennesker har for spil og historie. Platformen tilbyder et forum og en blogsektion, hvor alle kan dele bekymringer, stille spørgsmål, og diskutere metoder og resultater. Formålet er at skabe et levende fællesskab, hvor viden og erfaringer kan deles frit og åbent.</p>
+                    <button id="om-projektet-laes-mere-knap" class="btn-read-more">Læs mere om mig</button>
+                </div>
+            </div>
+            <!-- Om Mig Sektion (skjult som standard) -->
+            <div id="om-mig-sektion" class="hidden mt-10 md:mt-12 om-mig-article">
+                <h3 class="sub-section-title text-center">Om mig</h3>
+                <div class="max-w-3xl mx-auto text-gray-700 space-y-4">
+                    <p>Jeg hedder Emil og læser historie på kandidatuddannelsen (det er en overbygning på universitetet) ved Aarhus Universitet. Min historiske nysgerrighed og interesse spænder bredt, men jeg brænder særligt for den nyere fortid – det vi kalder samtidshistorie. Her beskæftiger jeg mig hovedsageligt med filosofi, videnskabsteori, krigs-, social-, kultur- og politisk historie, men også meget andet. Over det sidste års tid har jeg desuden fået en ny interesse for digital historie og teknologihistorie, og denne side er faktisk et studieprojekt i den forbindelse.</p>
+                    <p>Jeg er en dedikeret gamer og computernørd og har brugt tusindvis af timer på at udforske de spilverdener, som denne hjemmeside omhandler. Det er derfor efterhånden blevet en interesse, der både er personlig og akademisk. Allerede i folkeskolen og gymnasiet underviste jeg yngre elever i EDB og gaming. Senere, i en femårig periode, arbejdede jeg som esports-coach for professionelle udøvere på alt fra verdensmesterniveau til amatører i det berømte spil World of Warcraft. I den sammenhæng har jeg arbejdet med og undervist mange forskellige mennesker fra hele verden. Jeg har også selv været blandt de bedste spillere og har over flere omgange rangeret som verdens højest placeret spiller. Min egen spilerfaring, opbygget gennem snart to årtier, har givet mig en dyb indsigt i gamingkulturens og spillenes nuancer, dybde og kompleksitet – en forståelse, som kun intensiv og vedholdende fordybelse kan føre til.</p>
+                    <h4 class="text-lg font-semibold text-gray-800 mt-6 mb-2">Mine Spil-resultater:</h4>
+                    <ul class="list-disc pl-5">
+                        <li>World of Warcraft: Flere gange "Rank 1" (R1) med forskellige spilfigurer (det betyder at være blandt de bedste 0,01% af spillerne). Jeg har også været med i flere turneringer.</li>
+                        <li>Valorant: Immortal 3 (med 467 point i rangsystemet, hvilket er blandt de bedste 0,14% af spillerne).</li>
+                        <li>Counter-Strike: Global Elite (den højeste rang) & Faceit Level 10 ud af 10 (som er cirka de bedste 1% af spillerne).</li>
+                    </ul>
+                    <p>Her på siden glæder jeg mig til at dele mine tanker og analyser med jer – og jeg håber også at høre jeres!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ny Sektion: Gaming Kultur og Industri -->
+        <section id="gaming-kultur-industri" class="main-section py-12 md:py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl mx-auto text-gray-700 space-y-6">
+                    <h2 class="section-title text-center">Spilindustriens vækst og kulturformer</h2>
+                    <div class="text-center my-6 md:my-8">
+                        <blockquote class="text-xl md:text-2xl italic text-blue-700 font-semibold">
+                            "Den måske vigtigste børn-og undgomskultur vi har"
+                        </blockquote>
+                        <p class="mt-2 text-md text-gray-600">- Espen Aarseth, professor i spilvidenskab.</p>
+                    </div>
+                    <p>Siden det første computerspil, Spacewar!, så dagens lys i 1962, er spilbranchen vokset eksplosivt og er i dag en sand sværvægter i underholdningsverdenen. Mange bliver overraskede over at høre, at spilindustrien globalt set nu tjener mere end både film- og musikindustrien. Faktisk er der potentiale for, at den inden for få år kan overgå den samlede omsætning for film-, musik- og bogbranchen lagt sammen om et par år, hvis udviklingen fortsætter. I 2023 lå den globale spilomsætning et sted mellem 187,7 og 227,6 milliarder dollars. Det anslås, at der på verdensplan findes mellem 2,6 og 3,2 milliarder mennesker, der spiller digitale spil.</p>
+
+                    <h3 class="sub-section-title !text-left !border-b-0 !mb-2 !mt-8">Danske Børns digitale hverdag</h3>
+                    <p>I dag ejer cirka 98% af danske børn i alderen 12-14 år digitale enheder, og de bruger i gennemsnit to timer og fyrre minutter dagligt på tværs af forskellige sociale medieplatforme. Digitale spil er også en næsten universel del af danske børns liv. Hele 96% af drenge og 82% af piger i alderen 10-18 år spiller digitale spil. Heraf spiller 84% ugentligt og 46% dagligt. Drenge bruger typisk markant mere tid på at spille end piger, de spiller andre typer spil og af andre årsager. I gennemsnit spiller drenge to timer på hverdage og fire timer om dagen i weekenderne. I de mest ekstreme tilfælde kan børn og unge bruge mellem 8 og 14 timer om dagen på sociale medier og/eller spil.</p>
+
+                    <h3 class="sub-section-title !text-left !border-b-0 !mb-2 !mt-8">Forældre er usikre</h3>
+                    <p>På trods af den store udbredelse af spil og forskellige initiativer for at fremme digital dannelse, viser nye undersøgelser, at der er en stigende bekymring og usikkerhed blandt danske forældre. De er i tvivl om deres børns digitale vaner, og om fordelene ved skærmbrug opvejer ulemperne. Denne bekymring er ikke ubegrundet. De seneste årtier har barndommen ændret sig markant på grund af en tidligere og mere intensiv brug af elektroniske produkter til underholdning og kommunikation. En betydelig mængde forskning peger på en sammenhæng mellem den tid, børn bruger online – især på sociale medier – og en stigning i forskellige psykiske udfordringer og negativ adfærd. Som følge heraf bliver den digitale tidsalder ofte beskrevet som præget af angst, depression, et behov for øjeblikkelig tilfredsstillelse og opmærksomhedsforstyrrelser. Selvom dette er bekymrende, er det vigtigt at bemærke, at lidelsen Internet Gaming Disorder (IGD) kun rammer cirka 0,6% til 4% af europæiske unge.</p>
+                </div>
+            </div>
+        </section>
+        <!-- Slut på Ny Sektion -->
+
+        <!-- For Forældre Sektion -->
+        <section id="for-foraeldre" class="main-section py-12 md:py-16 bg-sky-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 rounded-xl p-6 sm:p-8 md:p-10">
+                <h2 class="section-title text-center">Råd og vejledning til forældre</h2>
+                <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Et hurtigt overblik over nøgleemner for forældre, der ønsker at forstå og engagere sig i deres børns spillevaner og om historiske spil generelt. Klik nedenfor for dybdegående information og ressourcer.</p>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Kort eksempel -->
+                    <div class="card"><div class="card-content"><h3 class="text-xl font-semibold text-blue-600 mb-4">Læringspotentiale</h3><p class="text-gray-700">Opdag hvordan historiske spil kan styrke dit barns viden om fortiden, udvikle kritisk tænkning og fremme empati.</p></div></div>
+                    <div class="card"><div class="card-content"><h3 class="text-xl font-semibold text-blue-600 mb-4">Skærmtid & balance</h3><p class="text-gray-700">Få konkrete tips til at etablere sunde spillevaner, aftale skærmtidsregler og sikre en god balance i hverdagen.</p></div></div>
+                    <div class="card"><div class="card-content"><h3 class="text-xl font-semibold text-blue-600 mb-4">Tryghed online</h3><p class="text-gray-700">Forstå PEGI-aldersmærkninger, lær om online interaktioner i spil og hvordan du taler med dit barn om digital sikkerhed.</p></div></div>
+                    <div class="card"><div class="card-content"><h3 class="text-xl font-semibold text-blue-600 mb-4">Dialog om spil</h3><p class="text-gray-700">Vigtigheden af at vise interesse for dit barns spil, skabe fælles spiloplevelser og bruge spil som et samtaleemne.</p></div></div>
+                    <div class="card"><div class="card-content"><h3 class="text-xl font-semibold text-blue-600 mb-4">Bekymringer & hjælp</h3><p class="text-gray-700">Genkend tegn på problematisk spiladfærd og find information om, hvor du kan søge professionel hjælp og vejledning.</p></div></div>
+                    <div class="card"><div class="card-content"><h3 class="text-xl font-semibold text-blue-600 mb-4">Konflikthåndtering</h3><p class="text-gray-700">Få redskaber til at forebygge og håndtere konflikter relateret til gaming i familien på en konstruktiv måde.</p></div></div>
+                </div>
+                <div class="text-center mt-12">
+                    <button id="vis-foraeldre-dybdegaaende-knap" class="btn-primary text-lg">Udforsk</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- For Undervisere Sektion -->
+        <section id="for-undervisere" class="main-section py-12 md:py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-center">For undervisere</h2>
+                <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Værktøjer, materialer og inspiration til undervisere, der ønsker at integrere historiske spil i undervisningen og udnytte deres pædagogiske potentiale.</p>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Kort eksempel med udforsk knap -->
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-text-content">
+                                <h3 class="text-xl font-semibold text-blue-600 mb-4">Forskningen i digitale historiske spil</h3>
+                                <p class="text-gray-700 text-sm">Udforsk den akademiske baggrund for spilbaseret læring og potentialet i historiske spil.</p>
+                            </div>
+                            <a href="javascript:void(0);" onclick="alert('Udforskning af forskning - funktionalitet under udvikling.')" class="btn-explore">Udforsk</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-text-content">
+                                <h3 class="text-xl font-semibold text-blue-600 mb-4">Download materialer</h3>
+                                <p class="text-gray-700 text-sm">Find klar-til-brug undervisningsmaterialer, opgaveark, case-studier osv. Materialerne er designet til at lette integrationen af spil og for at undervisere kan tilpasse dem personligt.</p>
+                            </div>
+                            <a href="javascript:void(0);" onclick="alert('Udforskning af materialer - funktionalitet under udvikling.')" class="btn-explore">Udforsk</a>
+                        </div>
+                    </div>
+                    <div class="card sm:col-span-2 lg:col-span-1"> <!-- Eksempel på et kort der spænder over flere kolonner på mindre skærme -->
+                        <div class="card-content">
+                            <div class="card-text-content">
+                                <h3 class="text-xl font-semibold text-blue-600 mb-4">Praktiske overvejelser</h3>
+                                <p class="text-gray-700 text-sm">Information om budgettering, tekniske krav, aldersgrænser osv.</p>
+                            </div>
+                            <a href="javascript:void(0);" onclick="alert('Udforskning af praktiske overvejelser - funktionalitet under udvikling.')" class="btn-explore">Udforsk</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spilbibliotek Sektion -->
+        <section id="spilbibliotek" class="main-section py-12 md:py-16 bg-gray-100">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 rounded-xl p-6 sm:p-8 md:p-10">
+                <h2 class="section-title text-center">Spilbibliotek</h2>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-12">
+                    <!-- Spilkort vil blive indsat her af JavaScript -->
+                </div>
+                <div class="text-center mt-12">
+                    <a href="javascript:void(0);" onclick="alert('Viser alle spil - funktionalitet under udvikling.')" class="btn-primary">Gå til hele spilbiblioteket</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog & Forum Sektion -->
+        <section id="blog" class="main-section py-12 md:py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-center">Blog & forum</h2>
+                <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Del erfaringer, stil spørgsmål og deltag i diskussionen om historiske spil, deres anvendelse i undervisningen og deres rolle i familien.</p>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <!-- Nyeste Blogindlæg -->
+                    <div class="card">
+                        <div class="card-content">
+                            <h3 class="text-xl font-semibold text-blue-600 mb-4">Nyeste blogindlæg</h3>
+                            <ul class="space-y-3">
+                                <li><a href="#" class="text-blue-500 hover:underline hover:text-blue-700">Analyse: Hvordan "Valiant Hearts" formidler Første Verdenskrigs menneskelige tragedier</a></li>
+                                <li><a href="#" class="text-blue-500 hover:underline hover:text-blue-700">Guide: Brug af "Discovery Tour" i historieundervisningen – erfaringer fra en 7. klasse</a></li>
+                                <li><a href="#" class="text-blue-500 hover:underline hover:text-blue-700">Debat: Er historisk korrekthed altid målet i spil?</a></li>
+                                <li><a href="#" class="text-blue-500 hover:underline hover:text-blue-700">Forældreguide: Tal med dit barn om Anden Verdenskrig gennem "Hearts of Iron IV"</a></li>
+                                <li><a href="#" class="text-blue-500 hover:underline hover:text-blue-700">Interview med spiludvikler: Tankerne bag et historisk strategispil</a></li>
+                            </ul>
+                            <a href="#" class="inline-block mt-6 btn-primary text-sm">Læs alle blogindlæg</a>
+                        </div>
+                    </div>
+                    <!-- Deltag i Forummet -->
+                    <div class="card">
+                        <div class="card-content">
+                            <h3 class="text-xl font-semibold text-blue-600 mb-4">Deltag i forummet</h3>
+                            <p class="text-gray-700 mb-6">Diskuter specifikke spil, pædagogiske metoder, del undervisningsforløb eller stil spørgsmål til andre forældre og undervisere. Forummet er et sted for vidensdeling og fællesskab.</p>
+                            <ul class="space-y-2 text-sm mb-6">
+                                <li><strong>Populære emner:</strong></li>
+                                <li><a href="#" class="text-gray-600 hover:text-blue-500">- Anbefalinger til spil om Middelalderen</a></li>
+                                <li><a href="#" class="text-gray-600 hover:text-blue-500">- Hvordan håndterer I skærmtid og historiske spil?</a></li>
+                                <li><a href="#" class="text-gray-600 hover:text-blue-500">- Tekniske udfordringer med [Spilnavn]?</a></li>
+                            </ul>
+                            <a href="#" class="btn-primary text-sm">Gå til forum</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kontakt Sektion -->
+        <section id="kontakt" class="main-section py-12 md:py-16 bg-sky-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 rounded-xl p-6 sm:p-8 md:p-10">
+                <h2 class="section-title text-center">Kontakt os</h2>
+                <p class="text-center text-gray-600 mb-10 max-w-xl mx-auto">Har du spørgsmål, feedback, forslag til spil til biblioteket, eller ønsker du at bidrage til platformen som gæsteblogger eller ekspert? Vi hører gerne fra dig.</p>
+                <form class="max-w-xl mx-auto space-y-6">
+                    <div><label for="name" class="block text-sm font-medium text-gray-700 mb-1">Navn</label><input type="text" name="name" id="name" autocomplete="name" class="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" placeholder="Dit navn"></div>
+                    <div><label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label><input type="email" name="email" id="email" autocomplete="email" class="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" placeholder="din@email.dk"></div>
+                    <div><label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Emne</label><input type="text" name="subject" id="subject" class="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" placeholder="F.eks. Feedback, Spilforslag, Samarbejde"></div>
+                    <div><label for="message" class="block text-sm font-medium text-gray-700 mb-1">Besked</label><textarea name="message" id="message" rows="5" class="mt-1 block w-full px-4 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" placeholder="Din besked..."></textarea></div>
+                    <div class="text-center pt-2"><button type="submit" class="btn-primary">Send besked</button></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Ressourcer Sektion -->
+        <section id="ressourcer" class="main-section py-12 md:py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-center">Fordybelse & Viden</h2>
+                <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Her finder du links til yderligere information, forskning og vejledning om børn, unge og gaming, samt den akademiske baggrund for brug af digitale historiske spil.</p>
+
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <div>
+                        <h3 class="text-xl font-semibold text-blue-700 mb-3">Eksterne ressourcer om gaming, børn og unge</h3>
+                        <ul class="space-y-3">
+                            <li><a href="https://bornsvilkar.dk/spiloggaming/" target="_blank" class="resource-link">Børns Vilkår - Spil og gaming</a></li>
+                            <li><a href="https://bornsvilkar.dk/skaermguiden/" target="_blank" class="resource-link">Børns Vilkår - Skærmguiden</a></li>
+                            <li><a href="https://snakmed.kk.dk/temaer/gaming" target="_blank" class="resource-link">SnakMed (Københavns Kommune) - Temaer om gaming</a></li>
+                            <li><a href="http://www.spillemyndigheden.dk/en/video-gaming-and-gambling" target="_blank" class="resource-link">Spillemyndigheden - Video gaming and gambling (Engelsk)</a></li>
+                            <li><a href="https://www.sst.dk/da/Fagperson/Forebyggelse-og-tvaergaaende-indsatser/Mental-og-digital-sundhed/Skaermbrug" target="_blank" class="resource-link">Sundhedsstyrelsen - Skærmbrug</a></li>
+                            <li><a href="https://psykiatrifonden.dk/diagnoser/spilafhaengighed-gaming-disorder" target="_blank" class="resource-link">Psykiatrifonden - Spilafhængighed (Gaming Disorder)</a></li>
+                            <li><a href="https://medieraadet.dk/viden/spil-og-gaming/" target="_blank" class="resource-link">Medierådet for Børn og Unge - Viden om spil og gaming</a></li>
+                            <li><a href="https://medieraadet.dk/vejledning/foraeldreguides/boern-gamer-en-guide-til-foraeldre" target="_blank" class="resource-link">Medierådet for Børn og Unge - Børn gamer: En guide til forældre</a></li>
+                             <li><a href="https://medieraadet.dk/Media/638380645636225759/Computerspil%20for%C3%A6ldreguide.pdf" target="_blank" class="resource-link">Medierådet for Børn og Unge - Computerspil forældreguide (PDF)</a></li>
+                            <li><a href="https://ludomani.dk/gaming-og-gambling/" target="_blank" class="resource-link">Center for Ludomani - Gaming og gambling</a></li>
+                            <li><a href="https://tjekspillet.dk/" target="_blank" class="resource-link">TjekSpillet.dk</a></li>
+                            <li><a href="https://esd.dk/wp-content/uploads/2024/03/Foraeldreguide.pdf" target="_blank" class="resource-link">eSport Danmark - Forældreguide (PDF)</a></li>
+                            <li><a href="https://ungdomsringen.dk/kompetenceudvikling/digital-paedagogik-gaming/" target="_blank" class="resource-link">Ungdomsringen - Digital pædagogik & gaming</a></li>
+                            <li><a href="https://cfdp.dk/" target="_blank" class="resource-link">Center for Digital Pædagogik</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Videre Læsning Artikel -->
+                    <div class="videre-laesning-article mt-10">
+                        <h3 class="sub-section-title">Videre læsning: Forskning i digitale historiske spil (mine anbefalinger)</h3>
+                        <ul class="list-disc pl-5 text-gray-700 space-y-3">
+                            <li>Chapman, Adam. <em>Digital Games as History: How Videogames Represent the Past and Offer Access to Historical Practice</em>. 1st ed. Vol. 7, Routledge Advances in Game Studies. Oxford: Routledge, 2016. doi:10.4324/9781315732060.</li>
+                            <li>Kapell, Matthew Wilhelm, and Andrew B.R. Elliott, eds. <em>Playing with the Past: Digital Games and the Simulation of History</em>. London: Bloomsbury Academic, 2013.</li>
+                            <li>Chapman, Adam, Anna Foka, and Jonathan Westin. “Introduction: What Is Historical Game Studies?” <em>Rethinking History</em> 21, no. 3 (2017): 358–71. https://doi.org/10.1080/13642529.2016.1256638.</li>
+                            <li>McCall, Jeremiah. <em>Gaming the Past: Using Video Games to Teach Secondary History</em>. 1st ed. Oxford: Routledge, 2013. doi:10.4324/9781003272229.</li>
+                        </ul>
+                    </div>
+
+                    <p class="mt-8 text-sm text-gray-600"><i>Bemærk: Denne platform er ikke ansvarlig for indholdet på eksterne hjemmesider. Listen er ment som inspiration og er ikke udtømmende.</i></p>
+                </div>
+            </div>
+        </section>
+    </div> <!-- Slut på main-content-container -->
+
+    <!-- Dybdegående Forældre Sektion (skjult som standard) -->
+    <section id="foraeldre-dybdegaaende" class="hidden py-12 md:py-16 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 rounded-xl shadow-lg p-6 sm:p-8 md:p-10 mt-0 sm:mt-8 md:mt-16"> <!-- Justeret margin-top for bedre visuel adskillelse -->
+            <div class="max-w-4xl mx-auto">
+                <h2 class="section-title text-center mb-10">Dybdegående råd og vejledning for forældre</h2>
+
+                <article id="gaming-generelt-intro-dyb" class="foraeldre-dybdegaaende-article mb-12">
+                    <h3 class="sub-section-title">Gaming i børne- og ungdomskulturen: mere end bare tidsfordriv</h3>
+                    <div class="space-y-4 text-gray-700 intro-gaming-text">
+                        <p>Digitale spil fylder utrolig meget i mange børn og unges liv. For mange er det ikke bare en hobby, men en central del af deres sociale liv, identitetsdannelse og måde at slappe af på. Historiske spil kan derudover tilbyde unikke læringsmuligheder, der rækker ud over traditionel undervisning.</p>
+                        <p>Som forælder kan det være en udfordring at navigere i denne verden. Hvordan sikrer man en sund balance? Hvordan udnytter man spillets potentiale for læring? Og hvordan taler man med sit barn om de oplevelser, de har i spillene? Denne sektion har til formål at give dig konkrete råd og redskaber.</p>
+                    </div>
+                </article>
+
+                <article id="laeringspotentiale-dyb" class="foraeldre-dybdegaaende-article mb-12">
+                    <h3 class="sub-section-title">Læringspotentialet i historiske spil</h3>
+                    <p>Historiske spil kan være en fantastisk døråbner til fortiden. De kan gøre historie levende og engagerende på måder, som bøger og film sjældent kan matche. Her er nogle af de måder, dit barn kan lære gennem historiske spil:</p>
+                    <ul>
+                        <li><strong>Konkretisering af historiske perioder:</strong> At "gå rundt" i oldtidens Rom eller opleve dagliglivet i en middelalderby kan give en dybere forståelse end at læse om det.</li>
+                        <li><strong>Udvikling af kritisk tænkning:</strong> Mange spil kræver strategisk tænkning, problemløsning og beslutningstagning under pres. Nogle spil præsenterer også historiske dilemmaer, der kan afføde refleksion.</li>
+                        <li><strong>Empati og perspektivtagning:</strong> Ved at påtage sig roller som historiske figurer kan børn udvikle en større forståelse for andre menneskers livsvilkår og motiver.</li>
+                        <li><strong>Motivation for yderligere læring:</strong> Et spændende spil kan vække nysgerrigheden og give lyst til at dykke dybere ned i en bestemt historisk periode eller begivenhed.</li>
+                    </ul>
+                    <p><strong>Tip:</strong> Spørg ind til spillet. Hvad handler det om? Hvilken periode foregår det i? Hvad synes dit barn er mest spændende eller udfordrende? Dette kan åbne for gode samtaler om historie.</p>
+                </article>
+
+                <article id="skaermtid-balance-dyb" class="foraeldre-dybdegaaende-article mb-12">
+                    <h3 class="sub-section-title">Skærmtid og balance i hverdagen</h3>
+                    <p>Det er vigtigt at finde en balance mellem gaming og andre aktiviteter som skole, fritidsinteresser, socialt samvær og søvn. Her er nogle råd:</p>
+                    <ul>
+                        <li><strong>Lav klare aftaler:</strong> Aftal sammen med dit barn, hvor meget tid der må bruges på spil, og hvornår det er okay at spille. Vær konsekvent med reglerne.</li>
+                        <li><strong>Integrer pauser:</strong> Opfordr til regelmæssige pauser fra skærmen for at undgå overbelastning og give øjnene hvile.</li>
+                        <li><strong>Prioriter søvn:</strong> Undgå spil lige før sengetid, da det kan påvirke søvnkvaliteten.</li>
+                        <li><strong>Fysisk aktivitet og andre interesser:</strong> Sørg for, at gaming ikke tager overhånd på bekostning af motion, leg udendørs og andre hobbyer.</li>
+                        <li><strong>Vær en god rollemodel:</strong> Vis selv sunde skærmvaner.</li>
+                    </ul>
+                    <p><strong>Husk:</strong> Kvaliteten af skærmtiden er lige så vigtig som kvantiteten. Et historisk spil med læringspotentiale kan være mere givende end passivt forbrug af videoer.</p>
+                </article>
+
+                <article id="tryghed-online-dyb" class="foraeldre-dybdegaaende-article mb-12">
+                    <h3 class="sub-section-title">Tryghed online og PEGI-mærkning</h3>
+                     <p>Mange spil involverer online interaktion med andre spillere. Det er vigtigt at tale med dit barn om sikker adfærd online:</p>
+                    <ul>
+                        <li><strong>Beskyttelse af personlige oplysninger:</strong> Lær dit barn aldrig at dele personlige oplysninger som fulde navn, adresse, telefonnummer eller passwords med fremmede online.</li>
+                        <li><strong>Online kommunikation:</strong> Tal om god tone og respektfuld adfærd over for andre spillere. Diskuter også, hvordan man håndterer ubehagelige kommentarer eller mobning.</li>
+                        <li><strong>Forstå PEGI-mærkningen:</strong> PEGI (Pan European Game Information) er et aldersmærkningssystem, der vejleder om spillets egnethed baseret på indhold (f.eks. vold, sprog). Sæt dig ind i, hvad de forskellige mærkninger betyder, og brug dem som en guide – men husk også at vurdere spillet i forhold til dit barns modenhed. Læs mere på <a href="https://pegi.info/da" target="_blank" class="text-blue-600 hover:underline">pegi.info</a>.</li>
+                    </ul>
+                </article>
+
+                <!-- Knapper i bunden af dybdegående sektion -->
+                <div class="mt-12 pt-8 border-t border-gray-300 text-center space-y-4 sm:space-y-0 sm:flex sm:justify-center sm:space-x-4">
+                    <button id="tilbage-til-foraeldre-oversigt-knap" class="btn-secondary mb-2 sm:mb-0">Tilbage til forældre oversigt</button>
+                    <a href="#forside" id="tilbage-til-forside-knap-dyb" class="btn-secondary">Tilbage til forsiden</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Spil Detalje Visning Sektion (skjult som standard) -->
+    <section id="spil-detalje-visning" class="hidden py-12 md:py-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 id="spil-detalje-titel" class="section-title text-center mb-8">Spiltitel</h2>
+            <div class="grid lg:grid-cols-3 gap-8 lg:gap-12">
+                <!-- Venstre kolonne: Billede og beskrivelse -->
+                <div class="lg:col-span-2 bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+                    <img id="spil-detalje-billede" src="https://placehold.co/600x400/CCCCCC/FFFFFF?text=Spil+Omslag+Detalje&font=inter" alt="Omslag til spil" class="rounded-lg shadow-md w-full h-auto object-cover mb-8" onerror="this.onerror=null;this.src='https://placehold.co/600x400/CCCCCC/FFFFFF?text=Billede+utilg%C3%A6ngeligt&font=inter';">
+
+                    <h3 class="sub-section-title" id="spil-detalje-om-tekst-overskrift">om spillet & historisk læring</h3>
+                    <p id="spil-detalje-periode" class="text-gray-600 mb-2"><strong>Periode:</strong> <span class="font-normal"></span></p>
+                    <div id="spil-detalje-beskrivelse-kort" class="text-gray-700 space-y-4"></div>
+                    <div id="spil-detalje-beskrivelse-lang" class="text-gray-700 space-y-4 mt-4 hidden-text dt-article"></div> <!-- dt-article klasse tilføjet -->
+                    <button id="laes-mere-knap" class="btn-read-more">Læs mere</button>
+
+                    <!-- Galleri Sektion -->
+                    <div id="spil-detalje-galleri-container" class="hidden mt-8">
+                        <h3 class="sub-section-title">galleri</h3>
+                        <div id="spil-detalje-galleri" class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                            <!-- Galleribilleder indsættes her af JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Højre kolonne: Vurdering, PEGI, Køb -->
+                <div class="lg:col-span-1 space-y-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="sidebar-title">vores vurdering</h3>
+                        <div class="space-y-5">
+                            <div>
+                                <h4 class="text-md font-semibold text-gray-700 mb-1.5">Sværhedsgrad</h4>
+                                <div class="flex items-center">
+                                    <div id="spil-detalje-svoerhedsgrad-cirkler" class="flex space-x-1.5 mr-3">
+                                        <!-- Cirkler indsættes her af JavaScript -->
+                                    </div>
+                                    <span id="spil-detalje-svoerhedsgrad-tekst" class="font-semibold text-gray-700 text-lg"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-md font-semibold text-gray-700 mb-1.5">Historisk Udbytte</h4>
+                                <div class="flex items-center">
+                                    <div id="spil-detalje-historiskudbytte-cirkler" class="flex space-x-1.5 mr-3">
+                                        <!-- Cirkler indsættes her af JavaScript -->
+                                    </div>
+                                    <span id="spil-detalje-historiskudbytte-tekst" class="font-semibold text-gray-700 text-lg"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="sidebar-title">pegi-vurdering</h3>
+                        <div id="spil-detalje-pegi-logo" class="mb-2 text-2xl font-bold text-gray-700"></div>
+                        <p id="spil-detalje-pegi-beskrivelse" class="text-sm text-gray-600"></p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h3 class="sidebar-title">køb spillet</h3>
+                        <div class="space-y-3">
+                            <a id="spil-detalje-steamlink" href="#" target="_blank" class="btn-external steam hidden">
+                                Køb på Steam
+                            </a>
+                            <a id="spil-detalje-g2alink" href="#" target="_blank" class="btn-external g2a hidden">
+                                Tjek pris på G2A
+                            </a>
+                            <a id="spil-detalje-ubisoftlink" href="#" target="_blank" class="btn-external bg-blue-500 hover:bg-blue-700 hidden"> <!-- Tilføjet Ubisoft knap -->
+                                Se på Ubisoft Store
+                            </a>
+                            <p id="spil-koeb-info" class="text-xs text-gray-500 mt-2"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Sektion -->
+            <div id="spil-detalje-video-container" class="hidden mt-10">
+                <h3 class="sub-section-title">video</h3>
+                <div id="spil-detalje-video" class="video-container">
+                    <!-- Video iframe indsættes her af JavaScript -->
+                </div>
+            </div>
+
+            <!-- Tilbage knap -->
+            <div class="mt-12 pt-8 border-t border-gray-300 text-center">
+                <button id="tilbage-til-spilbibliotek-knap" class="btn-secondary">Tilbage til Spilbibliotek</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer py-10 md:py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="mb-3">© <span id="currentYear"></span> Gaming og historie. Alle rettigheder forbeholdes.</p>
+            <p class="text-sm mb-4">Baseret på projekt af Emil Bæk Mogensen.</p>
+            <div class="space-x-4 sm:space-x-6 text-sm">
+                <a href="#" class="hover:text-white transition-colors">Privatlivspolitik</a>
+                <a href="#" class="hover:text-white transition-colors">Cookiepolitik</a>
+                <a href="#om-projektet" class="hover:text-white transition-colors">Om os</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elementer
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const iconOpen = document.getElementById('iconOpen');
+        const iconClose = document.getElementById('iconClose');
+
+        const mainContentContainer = document.getElementById('main-content-container');
+        const foraeldreDybdegaaendeSektion = document.getElementById('foraeldre-dybdegaaende');
+        const visForaeldreDybdegaaendeKnap = document.getElementById('vis-foraeldre-dybdegaaende-knap');
+        const tilbageTilForaeldreOversigtKnap = document.getElementById('tilbage-til-foraeldre-oversigt-knap');
+        const tilbageTilForsideKnapDyb = document.getElementById('tilbage-til-forside-knap-dyb');
+
+        const spilDetaljeVisningSektion = document.getElementById('spil-detalje-visning');
+        const spilDetaljeTitel = document.getElementById('spil-detalje-titel');
+        const spilDetaljeBillede = document.getElementById('spil-detalje-billede');
+        const spilDetaljePeriodeTekst = document.querySelector('#spil-detalje-periode span');
+        const spilDetaljeBeskrivelseKort = document.getElementById('spil-detalje-beskrivelse-kort');
+        const spilDetaljeBeskrivelseLang = document.getElementById('spil-detalje-beskrivelse-lang');
+        const laesMereKnap = document.getElementById('laes-mere-knap'); // "Læs mere" knap for spil detaljer
+        const tilbageTilSpilbibliotekKnap = document.getElementById('tilbage-til-spilbibliotek-knap');
+
+        // Elementer for spilvurdering og købslinks
+        const spilDetaljeSvoerhedsgradCirkler = document.getElementById('spil-detalje-svoerhedsgrad-cirkler');
+        const spilDetaljeSvoerhedsgradTekst = document.getElementById('spil-detalje-svoerhedsgrad-tekst');
+        const spilDetaljeHistoriskUdbytteCirkler = document.getElementById('spil-detalje-historiskudbytte-cirkler');
+        const spilDetaljeHistoriskUdbytteTekst = document.getElementById('spil-detalje-historiskudbytte-tekst');
+        const spilDetaljePegiLogo = document.getElementById('spil-detalje-pegi-logo');
+        const spilDetaljePegiBeskrivelse = document.getElementById('spil-detalje-pegi-beskrivelse');
+        const spilDetaljeSteamLink = document.getElementById('spil-detalje-steamlink');
+        const spilDetaljeG2ALink = document.getElementById('spil-detalje-g2alink');
+        const spilDetaljeUbisoftLink = document.getElementById('spil-detalje-ubisoftlink');
+        const spilKoebInfo = document.getElementById('spil-koeb-info');
+
+        // Elementer for galleri og video
+        const spilDetaljeGalleriContainer = document.getElementById('spil-detalje-galleri-container');
+        const spilDetaljeGalleri = document.getElementById('spil-detalje-galleri');
+        const spilDetaljeVideoContainer = document.getElementById('spil-detalje-video-container');
+        const spilDetaljeVideo = document.getElementById('spil-detalje-video');
+
+        const spilBibliotekGrid = document.querySelector('#spilbibliotek .grid');
+
+        const omProjektetLaesMereKnap = document.getElementById('om-projektet-laes-mere-knap');
+        const omMigSektion = document.getElementById('om-mig-sektion');
+
+
+        let menuOpen = false;
+
+        // Spildata objekt - OPDATERET RÆKKEFØLGE
+        const spilData = {
+            'total_war_serien': {
+                titel: "Total War serien",
+                billedeSrc: "https://placehold.co/600x338/D2B48C/8B4513?text=Billede+kommer+snart&font=inter",
+                cardBilledeSrc: "https://placehold.co/400x250/D2B48C/8B4513?text=Billede+kommer+snart&font=inter",
+                periode: "Forskellige historiske perioder (fra antikken til nyere tid)",
+                beskrivelseKortHTML: "<p>Total War-spillene er kendt for at kaste dig direkte ind i historiens store dramaer. Her får du ikke bare lov til at se på – du skal selv træffe beslutningerne og styre slagets gang. Det er store, komplekse spil, der lader dig udforske fortiden på mange forskellige måder.</p>",
+                udvidetBeskrivelseHTML: `
+                    <h4>Du er historiens hovedperson i Total War</h4>
+                    <p><strong>Form historien aktivt:</strong> I Total War er du ikke bare en passiv tilskuer. Spillene giver dig magten til selv at gribe ind og påvirke historiens gang. Din oplevelse og følelsen af at være til stede i fortiden er i centrum.</p>
+                    <p><strong>Lær gennem handling:</strong> Du bliver kastet ud i en verden fyldt med udfordringer, der skal løses – både på slagmarken og i rigets ledelse. Spillene engagerer mange sanser og kan på nogle måder tilbyde en anden form for læring end traditionelle metoder.</p>
+                    <p><strong>Frihed til at fejle og prøve igen:</strong> En af de store fordele ved spil som Total War er muligheden for at prøve igen, hvis noget går galt. Denne "frihed til at fejle" gør spillene til et spændende supplement, når man vil forstå svære historiske emner, f.eks. hvad der får ting til at ske (årsag og virkning), tilfældighedernes rolle, og hvordan både enkeltpersoner og samfundet som helhed har formet fortiden.</p>
+                    <p><strong>Se historien som en dynamisk proces:</strong> Når du selv kan ændre udfaldet af begivenheder, får du en dybere forståelse for, at historien ikke er en fastlagt rute, men en dynamisk proces med mange mulige veje. Det udfordrer den gængse fælde, hvor vi ser fortiden som en uundgåelig række af begivenheder, blot fordi vi kender facit. På den måde giver spillene dig adgang til nogle af de vigtigste redskaber, historikere bruger.</p>
+
+                    <h4>Total War som et vindue til fortiden: Muligheder og faldgruber</h4>
+                    <p><strong>Et bredt lærred:</strong> Total War-spillene maler med den brede pensel. I stedet for at fokusere på enkelte, afgrænsede begivenheder, lader de dig ofte styre nationer og imperier gennem lange tidsperioder. Netop denne dybde og kompleksitet gør dem interessante, men det betyder også, at de bygger på nogle underliggende idéer om, hvordan historie fungerer.</p>
+                    <p><strong>Kritiske briller er vigtige:</strong> Det er værd at bemærke, at disse spil, som alle andre fortolkninger af fortiden, kan have deres skævheder. Nogle gange kan de have et meget vestligt fokus, eller de kan fremstille historisk udvikling som en bestemt, næsten forudbestemt proces. De kan også lægge stor vægt på teknologi og økonomi som drivkræfter i historien.</p>
+                    <p><strong>Koloniale skyggesider:</strong> Nogle strategispil kan utilsigtet komme til at gentage gamle koloniale tankegange. Det sker, hvis spillet opfordrer til at udnytte ressourcer i andre dele af verden eller fremstiller oprindelige folk som passive brikker i stormagternes spil. Som forskerne Rebecca Mir og Trevor Owens har påpeget, kan spillene nogle gange "tvinge" spilleren ind i rollen som en kolonimagt.</p>
+                    <p><strong>Et tveægget sværd:</strong> Selvom der er god grund til at være kritisk, er det også vigtigt at se potentialet. Et spil som Total War kan på én gang både videregive etablerede fortællinger om fortiden og give dig redskaberne til at stille kritiske spørgsmål til dem. Samtidig kan du lære en masse grundlæggende historiske fakta. Hvad du får ud af spillet, afhænger i høj grad af, hvordan du eller en underviser griber det an – hvilke spørgsmål I stiller, og hvad I ønsker at opnå.</p>
+
+                    <h4>Store tanker bag spillets strategier: Hvordan Total War afspejler historiske idéer</h4>
+                    <p>Spil som Total War er mere end bare underholdning. De bygger ofte på – og lader os lege med – store idéer om, hvad der egentlig driver historien fremad, og hvordan samfund forandrer sig. Lad os kigge nærmere på et par af disse "historiske briller", man kan tage på, når man spiller:</p>
+                    <h5>Handler alt om penge og ressourcer? (Historisk materialisme)</h5>
+                    <p><strong>Kort sagt:</strong> Dette er en idé om, at et samfunds udvikling først og fremmest formes af dets økonomi og adgangen til ressourcer – tænk på guld, mad, jern og andre råstoffer. Disse materielle forhold ses som grundlaget for resten af samfundet.</p>
+                    <p><strong>I Total War:</strong> Du oplever hurtigt, hvor afgørende en stærk økonomi er. Uden penge og ressourcer kan du ikke bygge store hære, udvikle dine byer eller forske i ny teknologi. Spillene viser ofte meget direkte, hvordan din økonomiske situation sætter rammerne for, hvad du kan opnå.</p>
+                    <h5>Er vi formet af samfundet og teknologien? (Social og teknologisk determinisme)</h5>
+                    <p><strong>Kort sagt:</strong> Disse begreber handler om, hvor meget vores omgivelser styrer os. Social determinisme betyder, at samfundets opbygning, love og uskrevne regler i høj grad bestemmer vores handlinger og muligheder. Teknologisk determinisme er tanken om, at det især er ny teknologi, der skubber til historisk forandring – næsten som om teknologien har sin egen vilje.</p>
+                    <p><strong>I Total War:</strong> Læg mærke til, hvordan forskellige kulturer i spillet har særlige bygninger, enheder og måder at gøre tingene på – det er et ekko af social påvirkning. "Teknologitræet" er et godt eksempel på teknologisk determinisme i spil: Opfindelsen af bedre våben eller nye landbrugsmetoder kan ændre spillets gang fuldstændigt, som om teknologien i sig selv driver historien i en bestemt retning.</p>
+                    <h5>Kolonialisme i spillets verden</h5>
+                    <p><strong>Kort sagt:</strong> Kolonialisme er, når en stærk magt dominerer og udnytter andre områder og deres befolkninger, ofte langt fra egne grænser.</p>
+                    <p><strong>I Total War:</strong> Nogle gange kan måden spillet virker på, hvor du erobrer fjerne lande for at få fat i deres ressourcer, eller hvor lokale befolkninger skal holdes nede for at sikre kontrol, minde om historiske koloniale mønstre. Selvom det foregår i en spilverden, er det godt at være opmærksom på, hvordan spil kan afspejle eller endda forstærke disse tankegange.</p>
+                    <p>At kunne genkende disse store idéer, når du spiller Total War, kan gøre oplevelsen endnu rigere. Det giver en chance for at tænke over, hvilke fortællinger om fortiden spillene egentlig præsenterer, og hvordan de gør det.</p>
+
+                    <h4>Sådan fungerer et samfund: Lærdomme fra Total War (Mellem-niveau)</h4>
+                    <p><strong>Løs historiske problemer:</strong> Spillene placerer dig midt i politiske, økonomiske og kulturelle udfordringer. Det giver en forenklet, men konkret, forståelse af, hvordan samfund fungerer, udvikler sig, fejler og påvirker hinanden.</p>
+                    <p><strong>Statsledelse og interne konflikter:</strong> Du skal håndtere alt fra at arrangere ægteskaber for at sikre alliancer, udpege arvinger og ministre med forskellige personligheder og evner. Interne magtkampe, som f.eks. mellem de store familier i Romerriget i Rome II: Total War, skal tackles med alt fra bestikkelse til reformer.</p>
+                    <p><strong>Byg dit rige – med omtanke:</strong> Byer skal placeres strategisk for at udnytte ressourcer som mineraler (nær bjerge) eller handel (nær floder og kyster). Du skal udvikle din infrastruktur med militære bygninger, markeder, templer og kloaksystemer. Men da der er begrænset plads, er hver beslutning et valg – og et fravalg. Satser du alt på økonomi, bliver du sårbar over for angreb. Fokuserer du kun på militæret, risikerer du bankerot og oprør. Det er en konstant balancegang.</p>
+                    <p><strong>Teknologi og udvikling:</strong> Spillene indeholder ofte "teknologitræer", der simulerer fremskridt inden for militær, økonomi og samfundsliv, hvilket åbner op for nye muligheder og enheder.</p>
+
+                    <h4>Verdensscenen: Stormagtsspil og geografi (Højeste niveau)</h4>
+                    <p><strong>Kend dit verdenskort:</strong> Du lærer om landes navne, placering, størrelse, kulturer og historiske ledere. Hver nation har ofte unikke træk – f.eks. får Alexander den Store bonusser til sine felttog og adgang til de berømte hoplitter, mens Egypten har fordele inden for landbrug grundet Nilen.</p>
+                    <p><strong>Diplomati og krig:</strong> Du skal navigere i et komplekst internationalt system. Angriber du uden varsel, især allierede eller handelspartnere, vil det føre til mistillid, brudte aftaler og nye fjendtlige alliancer mod dig.</p>
+
+                    <h4>Slagmarkens realiteter i Total War (Detalje-niveau)</h4>
+                    <p><strong>General for en dag:</strong> En af de mest kendte dele af Total War er de store, taktiske slag, hvor du i realtid kommanderer tusindvis af soldater. Terrænet – bakker, skove, smalle passager – spiller en afgørende rolle for, hvordan slaget udvikler sig. Du kan udnytte dækning, højdefordele og flankere fjenden.</p>
+                    <p><strong>Krigens ABC:</strong> Her lærer du om krigens grundprincipper: Hvad sker der med moralen, når fjenden angriber i flanken? Hvordan bruger man bedst forskellige enhedstyper – bueskytter mod panser, kavaleri mod spydmænd, eller belejringsmaskiner mod fæstningsværker?</p>
+                    <p><strong>En levende oplevelse af krig:</strong> Denne interaktive og intense oplevelse står i skarp kontrast til de statiske kort over slag, man ofte ser i historiebøger. Selvom spillene ikke er en 100% nøjagtig gengivelse af f.eks. Slaget ved Waterloo, kan de give en mere praktisk helhedsforståelse af, hvordan krigsførelse foregik i en given periode.</p>
+                `,
+                svoerhedsgrad: 4,
+                historiskUdbytte: 4,
+                pegiRating: "16 (varierer)",
+                pegiBeskrivelse: "Spil med denne rating kan indeholde mere intens eller realistisk vold, groft sprogbrug, eller referencer til ulovlige stoffer eller seksuel aktivitet. Ratingen varierer afhængigt af det specifikke spil i serien.",
+                steamLink: "https://store.steampowered.com/franchise/TotalWar",
+                g2aLink: "https://www.g2a.com/search?query=total%20war",
+                ubisoftLink: null,
+                koebInfoTekst: "Total War-spil udgives af SEGA og udvikles af Creative Assembly. De findes ofte på Steam og andre digitale platforme. Hold øje med udsalg.",
+                galleriBilleder: [
+                    "https://placehold.co/300x200/CD853F/FFFFFF?text=TW+Slagscene&font=inter",
+                    "https://placehold.co/300x200/CD853F/FFFFFF?text=TW+Kampagnekort&font=inter",
+                    "https://placehold.co/300x200/CD853F/FFFFFF?text=TW+Enheder&font=inter"
+                ],
+                youtubeVideoId: "ZEERI_n_W-E"
+            },
+            'discovery_tour': {
+                titel: "Assassin's Creed Discovery Tour",
+                anbefaling: true,
+                billedeSrc: "https://placehold.co/600x338/A7F3D0/1E3A8A?text=Billede+kommer+snart&font=inter",
+                cardBilledeSrc: "https://placehold.co/400x250/A7F3D0/1E3A8A?text=Billede+kommer+snart&font=inter",
+                periode: "Oldtidens Ægypten, antikkens Grækenland, Vikingetiden",
+                beskrivelseKortHTML: `
+                    <p>Tag på en <strong>fredelig og lærerig rejse</strong> tilbage til oldtidens Ægypten, antikkens Grækenland eller vikingetiden med Discovery Tour! Her er ingen kampe – kun ren opdagelse. Udforsk utroligt detaljerede verdener, lær om dagliglivet, kulturen og historien i dit eget tempo. Perfekt for elever, lærere og alle historieinteresserede.</p>
+                `,
+                udvidetBeskrivelseHTML: `
+                    <p>Assassin's Creed Discovery Tour er skabt specielt med undervisning for øje. Forestil dig at kunne træde direkte ind i oldtidens Egypten, det antikke Grækenland eller vikingetidens England – helt uden de kampe og farer, man normalt finder i Assassin's Creed-spillene. I stedet kan du frit udforske utroligt detaljerede historiske verdener, næsten som et levende, interaktivt museum. Formålet er at gøre historien levende og tilgængelig, og derfor er disse ture udviklet i tæt samarbejde med anerkendte historikere og institutioner, herunder Cat Jarman, en internationalt anerkendt arkæolog og førende ekspert i vikingetiden, og McGill University.</p>
+                    <h4>Hvad er Discovery Tour?</h4>
+                    <p><strong>En fredelig tidsrejse designet til læring:</strong> I Discovery Tour er der ingen fjender at bekæmpe eller missioner, der haster. Du kan frit gå på opdagelse, se de imponerende bygningsværker, og lære om dagliglivet, kulturen og de mennesker, der levede dengang. Det er en unik måde at opleve historien på, hvor fokus er på viden og forståelse.</p>
+                    <p><strong>Skabt med eksperter for troværdighed:</strong> For at sikre så korrekte og levende verdener som muligt, har spiludviklerne arbejdet tæt sammen med en række historikere, arkæologer og andre specialister. Deres viden er bygget ind i de informationer, du får undervejs, lidt som guidede ture på et museum, men med en langt større grad af fordybelse.</p>
+                    <p><strong>Fra museumstur til fortælling:</strong> De første Discovery Tours (Egypten og Grækenland) mindede mest om guidede ture, hvor du gik fra sted til sted og fik fortalt om historien. I den nyere version (Vikingetiden) er der kommet mere historie og små opgaver, hvor du følger bestemte personers liv. Det gør oplevelsen mere personlig og engagerende.</p>
+                    <h4>Hvad kan du lære med Discovery Tour?</h4>
+                    <p><strong>Historien bliver levende:</strong> Den største fordel er, at du virkelig kan se og opleve fortiden. Det er noget helt andet end at læse i en bog eller se billeder. Du får en fornemmelse af stedernes størrelse og hvordan dagligdagen kunne have set ud. Det kan gøre historien meget mere spændende og relevant.</p>
+                    <p><strong>Forståelse gennem oplevelse:</strong> Mange, der har prøvet Discovery Tour, fortæller, at de bedre forstår de historiske emner, fordi de har "været der selv". Det kan give en dybere forbindelse til fortidens mennesker, især i Vikinge-udgaven, hvor du følger personlige historier.</p>
+                    <p><strong>Et sikkert læringsrum:</strong> Fordi al vold er fjernet, er Discovery Tour et trygt sted at lære, også for yngre spillere eller i klasseværelset.</p>
+                    <h4>Hvad skal du være opmærksom på?</h4>
+                    <ul>
+                        <li><strong>Ikke altid et "spil":</strong> Nogle gange kan det føles mere som at gå på museum end at spille et spil, især i de ældre versioner. Du kan ikke altid interagere så meget med omgivelserne.</li>
+                        <li><strong>Forenklinger og valg:</strong> Selvom der er gjort meget for at være historisk korrekt, er det stadig en spilfortolkning. Der vil altid være forenklinger, og nogle gange er der truffet valg for at gøre oplevelsen bedre. Det er godt at huske, at det ikke er en 100% perfekt gengivelse af fortiden.</li>
+                        <li><strong>Ting der ikke passer ind (Anakronismer):</strong> Nogle gange kan der dukke ting op, som egentlig hører til en lidt anden tidsperiode.</li>
+                        <li><strong>Nutidens briller (Presentisme):</strong> Det kan være svært helt at undgå at se fortiden med nutidens øjne og værdier.</li>
+                        <li><strong>Bedst som et supplement:</strong> Discovery Tour er fantastisk til at give et visuelt indblik, men det erstatter ikke bøger, film eller en god snak med en lærer. Det virker bedst, når det bruges sammen med andre måder at lære på.</li>
+                    </ul>
+                    <h4>Gode råd til at bruge Discovery Tour</h4>
+                    <ul>
+                        <li><strong>Vær nysgerrig og kritisk:</strong> Stil spørgsmål til det, du ser. Hvorfor ser det sådan ud? Passer det med, hvad du ved fra andre steder?</li>
+                        <li><strong>Brug "Bag kulisserne":</strong> Nogle versioner har information om, hvordan spiludviklerne har arbejdet med historien. Det kan være rigtig spændende at se deres overvejelser.</li>
+                        <li><strong>Skab dine egne opgaver:</strong> Selvom der er guidede ture, kan du også bare udforske frit. Måske kan du finde alle templerne i en by eller følge en bestemt persons rute?</li>
+                    </ul>
+                    <p>Discovery Tour giver en unik mulighed for at træde ind i fortiden. Det er en flot og engagerende måde at lære på, især hvis man husker at bruge det som et af flere værktøjer til at forstå historien.</p>
+                `,
+                svoerhedsgrad: 1,
+                historiskUdbytte: 5,
+                pegiRating: "3*",
+                pegiBeskrivelse: "*Discovery Tour-modulerne er designet til at være uden vold og egnet til uddannelsesbrug. PEGI-rating for de enkelte Discovery Tours kan variere (typisk lav), men de er generelt sikre for yngre brugere. Tjek altid den specifikke version. F.eks. er Discovery Tour: Viking Age PEGI 3.",
+                steamLink: null,
+                g2aLink: "https://www.g2a.com/search?query=assassin%27s%20creed%20discovery%20tour",
+                ubisoftLink: "https://www.ubisoft.com/en-us/game/assassins-creed/discovery-tour",
+                koebInfoTekst: "Discovery Tours er ofte inkluderet med hovedspillene (Origins, Odyssey, Valhalla) eller kan købes separat. Tjek de enkelte platforme for tilgængelighed.",
+                galleriBilleder: [
+                    "https://placehold.co/300x200/A7F3D0/1E3A8A?text=DT+Egypten&font=inter",
+                    "https://placehold.co/300x200/A7F3D0/1E3A8A?text=DT+Gr%C3%A6kenland&font=inter",
+                    "https://placehold.co/300x200/A7F3D0/1E3A8A?text=DT+Vikingetid&font=inter"
+                ],
+                youtubeVideoId: "UvG1G8yNnKo"
+            },
+            'hoi4': {
+                titel: "Hearts of Iron IV",
+                billedeSrc: "https://placehold.co/600x338/78716C/FFFFFF?text=Billede+kommer+snart&font=inter",
+                cardBilledeSrc: "https://placehold.co/400x250/78716C/FFFFFF?text=Billede+kommer+snart&font=inter",
+                periode: "Anden Verdenskrig (fra 1936)",
+                beskrivelseKortHTML: "<p>Mere information om dette spil kommer snart, da siden er under udbygning.</p>",
+                udvidetBeskrivelseHTML: "<p>Mere information om dette spil kommer snart, da siden er under udbygning.</p>",
+                svoerhedsgrad: 5,
+                historiskUdbytte: 5,
+                pegiRating: "7",
+                pegiBeskrivelse: "Spillet har en PEGI 7-rating. Dette indikerer, at spillet kan indeholde scener med ikke-realistisk vold mod fantasifigurer eller mild vold (f.eks. antydet, ikke-detaljeret vold).",
+                steamLink: "https://store.steampowered.com/app/394360/Hearts_of_Iron_IV/",
+                g2aLink: "https://www.g2a.com/search?query=hearts%20of%20iron%204",
+                ubisoftLink: null,
+                koebInfoTekst: "Tip: Hold øje med udsalg på spilplatforme som Steam. Strategispil som Hearts of Iron IV kan ofte findes med store rabatter, nogle gange helt op til 70-80%!",
+                galleriBilleder: [
+                    "https://placehold.co/300x200/64748B/FFFFFF?text=Billede+kommer+snart&font=inter",
+                    "https://placehold.co/300x200/64748B/FFFFFF?text=Billede+kommer+snart&font=inter",
+                    "https://placehold.co/300x200/64748B/FFFFFF?text=Billede+kommer+snart&font=inter"
+                ],
+                youtubeVideoId: "e9L_t50S7s4"
+            },
+            'ac_serien': {
+                titel: "Assassin's Creed serien",
+                billedeSrc: "https://placehold.co/600x338/D1D5DB/FFFFFF?text=Billede+kommer+snart&font=inter",
+                cardBilledeSrc: "https://placehold.co/400x250/D1D5DB/FFFFFF?text=Billede+kommer+snart&font=inter",
+                periode: "Forskellige historiske perioder",
+                beskrivelseKortHTML: "<p>Mere information om dette spil kommer snart, da siden er under udbygning.</p>",
+                udvidetBeskrivelseHTML: "<p>Mere information om dette spil kommer snart, da siden er under udbygning.</p>",
+                svoerhedsgrad: 3,
+                historiskUdbytte: 4,
+                pegiRating: "18",
+                pegiBeskrivelse: "Spillet har en PEGI 18-rating. Dette skyldes typisk realistisk udseende vold mod menneskelignende figurer og/eller groft sprogbrug. Indholdet er uegnet for personer under 18 år.",
+                steamLink: "https://store.steampowered.com/franchise/AC/?l=danish",
+                g2aLink: "https://www.g2a.com/category/games-c1?f[game_content_tags][0]=assassins-creed&f[game_content_tags][1]=series",
+                ubisoftLink: "https://store.ubisoft.com/ofertas/franchise-assassin-s-creed",
+                koebInfoTekst: "Tip: Assassin's Creed-spil kommer ofte på udsalg. Ældre titler i serien kan findes meget billigt, mens nye spil også jævnligt får rabatter.",
+                galleriBilleder: [
+                    "https://placehold.co/300x200/ADB5BD/FFFFFF?text=Billede+kommer+snart&font=inter",
+                    "https://placehold.co/300x200/ADB5BD/FFFFFF?text=Billede+kommer+snart&font=inter",
+                    "https://placehold.co/300x200/ADB5BD/FFFFFF?text=Billede+kommer+snart&font=inter"
+                ],
+                youtubeVideoId: "x5LgLdG322o"
+            }
+        };
+
+        // Funktion til at generere spilkort i spilbiblioteket
+        function genererSpilKort() {
+            if (!spilBibliotekGrid) return;
+            spilBibliotekGrid.innerHTML = ''; // Ryd eksisterende kort
+
+            Object.keys(spilData).forEach(spilId => {
+                const spil = spilData[spilId];
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.dataset.spilid = spilId; // Gem spil-ID for senere brug
+
+                let anbefalingBadgeHTML = '';
+                if (spil.anbefaling) {
+                    anbefalingBadgeHTML = `<div class="anbefaling-badge">Vores anbefaling</div>`;
+                }
+
+                // Uddrag første <p> tag fra beskrivelseKortHTML for en kortere tekst
+                let kortBeskrivelseTekst = "Ingen kort beskrivelse tilgængelig.";
+                if (spil.beskrivelseKortHTML) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = spil.beskrivelseKortHTML;
+                    const firstP = tempDiv.querySelector('p');
+                    if (firstP) {
+                        kortBeskrivelseTekst = (firstP.textContent || firstP.innerText || "").substring(0, 110) + "...";
+                    } else {
+                        // Fallback hvis der ikke er et <p> tag
+                        kortBeskrivelseTekst = (tempDiv.textContent || tempDiv.innerText || "").substring(0, 110) + "...";
+                    }
+                }
+
+                cardElement.innerHTML = `
+                    ${anbefalingBadgeHTML}
+                    <img src="${spil.cardBilledeSrc || 'https://placehold.co/400x250/CCCCCC/FFFFFF?text=Billede+mangler&font=inter'}" alt="Omslag til ${spil.titel}" class="rounded-t-lg w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x250/CCCCCC/FFFFFF?text=Billede+utilg%C3%A6ngeligt&font=inter';">
+                    <div class="card-content p-5">
+                        <h3 class="text-xl font-semibold text-blue-600 mb-2">${spil.titel}</h3>
+                        <p class="text-sm text-gray-500 mb-3">Periode: ${spil.periode}</p>
+                        <p class="text-gray-700 text-sm mb-4 line-clamp-3">${kortBeskrivelseTekst}</p>
+                        <a href="javascript:void(0);" onclick="visSpilDetaljer('${spilId}')" class="text-blue-500 hover:text-blue-700 font-semibold text-sm mt-auto block">Læs mere</a>
+                    </div>
+                `;
+                spilBibliotekGrid.appendChild(cardElement);
+            });
+        }
+
+
+        // Funktion til at vise dybdegående forældreside
+        function showDetailedParentPage() {
+            mainContentContainer.classList.add('hidden');
+            spilDetaljeVisningSektion.classList.add('hidden'); // Skjul spildetaljer også
+            foraeldreDybdegaaendeSektion.classList.remove('hidden');
+            foraeldreDybdegaaendeSektion.classList.add('block');
+            const navHeight = document.querySelector('nav').offsetHeight;
+            window.scrollTo({ top: foraeldreDybdegaaendeSektion.offsetTop - navHeight, behavior: 'smooth' });
+            updateActiveLink(); // Opdater aktivt link i nav
+        }
+
+        // Funktion til at vise hovedindholdssiden (og scrolle til en bestemt sektion)
+        function showMainContentPage(scrollToSectionId = null) {
+            foraeldreDybdegaaendeSektion.classList.add('hidden');
+            spilDetaljeVisningSektion.classList.add('hidden'); // Skjul spildetaljer også
+            mainContentContainer.classList.remove('hidden');
+            mainContentContainer.classList.add('block'); // Sørg for at hovedcontaineren er synlig
+
+            let targetElement = document.getElementById(scrollToSectionId || 'forside'); // Standard til forside
+
+            if (targetElement) {
+                 const headerOffset = document.querySelector('nav').offsetHeight;
+                 const elementPosition = targetElement.getBoundingClientRect().top;
+                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                 window.scrollTo({ top: offsetPosition, behavior: 'smooth'});
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll til toppen hvis sektion ikke findes
+            }
+            updateActiveLink(); // Opdater aktivt link i nav
+        }
+
+        // Funktion til at rendere ratingcirkler
+        function renderRatingCircles(container, score, maxScore, scoreColors, neutralColor = 'bg-gray-300') {
+            container.innerHTML = ''; // Ryd eksisterende cirkler
+            for (let i = 1; i <= maxScore; i++) {
+                const circle = document.createElement('span');
+                circle.className = 'rating-circle'; // Grundlæggende styling
+                if (i <= score) {
+                    circle.classList.add(scoreColors[Math.min(score - 1, scoreColors.length - 1)]); // Farve baseret på score
+                } else {
+                    circle.classList.add(neutralColor); // Neutral farve for tomme cirkler
+                }
+                container.appendChild(circle);
+            }
+        }
+
+        // Funktion til at vise spildetaljer
+        function visSpilDetaljer(spilId) {
+            const data = spilData[spilId];
+            if (!data) {
+                console.error("Spildata ikke fundet for ID:", spilId);
+                spilDetaljeTitel.textContent = "Spil ikke fundet";
+                spilDetaljeBillede.src = "https://placehold.co/600x400/FF0000/FFFFFF?text=Fejl&font=inter";
+                return;
+            }
+
+            // Opdater basale spilinformationer
+            spilDetaljeTitel.textContent = data.titel;
+            spilDetaljeBillede.src = data.billedeSrc || 'https://placehold.co/600x338/CCCCCC/FFFFFF?text=Billede+mangler&font=inter'; // Fallback billede
+            spilDetaljeBillede.alt = "Omslag til " + data.titel;
+            spilDetaljePeriodeTekst.textContent = data.periode;
+            spilDetaljeBeskrivelseKort.innerHTML = data.beskrivelseKortHTML || "<p>Ingen kort beskrivelse tilgængelig.</p>";
+            spilDetaljeBeskrivelseLang.innerHTML = data.udvidetBeskrivelseHTML || "";
+
+            // Håndter "Læs mere" knap synlighed og tekst
+            if (data.udvidetBeskrivelseHTML && data.udvidetBeskrivelseHTML.trim() !== "" && !(data.udvidetBeskrivelseHTML.includes("under udbygning"))) {
+                laesMereKnap.classList.remove('hidden');
+                laesMereKnap.textContent = 'Læs mere';
+                spilDetaljeBeskrivelseLang.classList.add('hidden-text'); // Skjul lang beskrivelse som standard
+                spilDetaljeBeskrivelseLang.classList.remove('expanded-text');
+            } else {
+                laesMereKnap.classList.add('hidden');
+                spilDetaljeBeskrivelseLang.classList.remove('hidden-text'); // Vis hvis ingen "Læs mere"
+                spilDetaljeBeskrivelseLang.classList.add('expanded-text'); // Sikrer den er synlig
+            }
+
+
+            // Farver for ratingcirkler
+            const difficultyColors = ['bg-green-500', 'bg-lime-500', 'bg-yellow-500', 'bg-orange-500', 'bg-red-500'];
+            const historicalValueColors = ['bg-emerald-300', 'bg-emerald-400', 'bg-emerald-500', 'bg-emerald-600', 'bg-emerald-700'];
+
+            // Render ratingcirkler og tekst
+            renderRatingCircles(spilDetaljeSvoerhedsgradCirkler, data.svoerhedsgrad || 0, 5, difficultyColors);
+            spilDetaljeSvoerhedsgradTekst.textContent = `${data.svoerhedsgrad || 'N/A'}/5`;
+            renderRatingCircles(spilDetaljeHistoriskUdbytteCirkler, data.historiskUdbytte || 0, 5, historicalValueColors);
+            spilDetaljeHistoriskUdbytteTekst.textContent = `${data.historiskUdbytte || 'N/A'}/5`;
+
+            // Opdater PEGI information
+            spilDetaljePegiLogo.textContent = data.pegiRating ? `PEGI ${data.pegiRating}` : "N/A";
+            spilDetaljePegiBeskrivelse.innerHTML = data.pegiBeskrivelse || ""; // Tillad HTML for links i PEGI beskrivelse
+
+            // Skjul alle købslinks som standard
+            spilDetaljeSteamLink.classList.add('hidden'); // Skjul Steam link
+            spilDetaljeG2ALink.classList.add('hidden'); // Skjul G2A link
+            spilDetaljeUbisoftLink.classList.add('hidden'); // Skjul Ubisoft link
+
+            // Vis relevante købslinks
+            if (data.steamLink) {
+                spilDetaljeSteamLink.href = data.steamLink;
+                spilDetaljeSteamLink.classList.remove('hidden');
+            }
+            if (data.g2aLink) {
+                spilDetaljeG2ALink.href = data.g2aLink;
+                spilDetaljeG2ALink.classList.remove('hidden');
+            }
+            if (data.ubisoftLink) {
+                spilDetaljeUbisoftLink.href = data.ubisoftLink;
+                spilDetaljeUbisoftLink.classList.remove('hidden');
+            }
+            spilKoebInfo.textContent = data.koebInfoTekst || "Tjek spillets officielle hjemmeside eller dine foretrukne digitale spilbutikker for købsmuligheder.";
+            spilKoebInfo.classList.remove('hidden');
+
+
+            // Håndter galleri
+            spilDetaljeGalleri.innerHTML = ""; // Ryd tidligere billeder
+            if (data.galleriBilleder && data.galleriBilleder.length > 0) {
+                data.galleriBilleder.forEach(imgSrc => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = imgSrc; // Brug den faktiske billedkilde
+                    imgElement.alt = data.titel + " galleri billede";
+                    imgElement.className = "rounded-lg shadow-md w-full h-auto object-cover cursor-pointer"; // Styling for galleribilleder
+                    imgElement.onerror = function() { this.onerror=null; this.src='https://placehold.co/300x200/CCCCCC/FFFFFF?text=Billede+utilg%C3%A6ngeligt&font=inter'; }; // Fallback
+                    spilDetaljeGalleri.appendChild(imgElement);
+                });
+                spilDetaljeGalleriContainer.classList.remove('hidden');
+            } else {
+                spilDetaljeGalleriContainer.classList.add('hidden');
+            }
+
+            // Håndter video
+            spilDetaljeVideo.innerHTML = ""; // Ryd tidligere video
+            if (data.youtubeVideoId) {
+                const iframe = document.createElement('iframe');
+                iframe.src = `https://www.youtube-nocookie.com/embed/${data.youtubeVideoId}`;
+                iframe.title = "YouTube video player for " + data.titel;
+                iframe.frameBorder = "0";
+                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+                iframe.allowFullscreen = true; // Tillad fuldskærm
+                spilDetaljeVideo.appendChild(iframe);
+                spilDetaljeVideoContainer.classList.remove('hidden');
+            } else {
+                spilDetaljeVideoContainer.classList.add('hidden');
+            }
+
+
+            // Skift til spildetaljevisning
+            mainContentContainer.classList.add('hidden');
+            foraeldreDybdegaaendeSektion.classList.add('hidden'); // Skjul også denne
+            spilDetaljeVisningSektion.classList.remove('hidden');
+            spilDetaljeVisningSektion.classList.add('block');
+
+            // Scroll til toppen af spildetaljevisningen
+            const navHeight = document.querySelector('nav').offsetHeight;
+            window.scrollTo({ top: spilDetaljeVisningSektion.offsetTop - navHeight, behavior: 'smooth' });
+            updateActiveLink(); // Opdater aktivt link i nav
+        }
+
+        // Event listener for "Læs mere" knappen i spildetaljer
+        if (laesMereKnap) {
+            laesMereKnap.addEventListener('click', () => {
+                const isHidden = spilDetaljeBeskrivelseLang.classList.contains('hidden-text');
+                spilDetaljeBeskrivelseLang.classList.toggle('hidden-text', !isHidden);
+                spilDetaljeBeskrivelseLang.classList.toggle('expanded-text', isHidden);
+                laesMereKnap.textContent = isHidden ? 'Læs mindre' : 'Læs mere';
+            });
+        }
+
+        // Event listener for "Læs mere om mig" knappen
+        if (omProjektetLaesMereKnap) {
+            omProjektetLaesMereKnap.addEventListener('click', () => {
+                const isHidden = omMigSektion.classList.contains('hidden');
+                omMigSektion.classList.toggle('hidden', !isHidden);
+                omMigSektion.classList.toggle('block', isHidden);
+                omProjektetLaesMereKnap.textContent = isHidden ? 'Læs mindre' : 'Læs mere om mig';
+                if(isHidden) { // Hvis sektionen nu er synlig, scroll til den
+                     const headerOffset = document.querySelector('nav').offsetHeight;
+                     const elementPosition = omMigSektion.getBoundingClientRect().top;
+                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                     window.scrollTo({ top: offsetPosition, behavior: 'smooth'});
+                }
+            });
+        }
+
+        // Event listeners for navigationsknapper
+        if (visForaeldreDybdegaaendeKnap) visForaeldreDybdegaaendeKnap.addEventListener('click', showDetailedParentPage);
+        if (tilbageTilForaeldreOversigtKnap) tilbageTilForaeldreOversigtKnap.addEventListener('click', () => showMainContentPage('for-foraeldre'));
+        if (tilbageTilForsideKnapDyb) tilbageTilForsideKnapDyb.addEventListener('click', (e) => { e.preventDefault(); showMainContentPage('forside'); });
+        if (tilbageTilSpilbibliotekKnap) tilbageTilSpilbibliotekKnap.addEventListener('click', () => showMainContentPage('spilbibliotek'));
+
+        // Mobilmenu funktionalitet
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                menuOpen = !menuOpen;
+                mobileMenu.classList.toggle('hidden'); mobileMenu.classList.toggle('block'); // Vis/skjul menu
+                iconOpen.classList.toggle('hidden'); iconOpen.classList.toggle('block'); // Skift ikon
+                iconClose.classList.toggle('hidden'); iconClose.classList.toggle('block'); // Skift ikon
+                mobileMenuButton.setAttribute('aria-expanded', menuOpen.toString());
+            });
+        }
+
+        // Smooth scroll for ankerlinks og opdatering af aktivt link
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+
+                // Undgå at forhindre default for specifikke knapper der allerede har onclick
+                if ((this.getAttribute('onclick') && this.getAttribute('onclick').includes('visSpilDetaljer')) ||
+                    this.id === 'tilbage-til-forside-knap-dyb' || // Specifik knap der allerede håndterer navigation
+                    (this.id && this.id.includes('vis-foraeldre-dybdegaaende-knap'))) {
+                    return;
+                }
+
+                if (targetId.startsWith('#') && targetId !== '#') { // Kun for interne links
+                    e.preventDefault();
+                    const isNavLinkToMainSection = Array.from(document.querySelectorAll('#desktopMenu a, #mobileMenu a')).includes(this);
+
+                    // Hvis vi er på en "underside" (forældre dybdegående eller spil detalje) OG linket er til en hovedsektion
+                    if ((!foraeldreDybdegaaendeSektion.classList.contains('hidden') || !spilDetaljeVisningSektion.classList.contains('hidden')) && isNavLinkToMainSection) {
+                        showMainContentPage(targetId.substring(1));
+                    } else { // Ellers, normal scroll på den aktuelle side
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            const headerOffset = document.querySelector('nav').offsetHeight; // Højden på navbaren
+                            const elementPosition = targetElement.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                        }
+                    }
+                }
+                // Luk mobilmenu hvis åben og et link (ikke #) er klikket
+                if (menuOpen && targetId !== '#') { // Undgå at lukke på "tomme" links
+                    mobileMenu.classList.add('hidden'); mobileMenu.classList.remove('block');
+                    iconOpen.classList.remove('hidden'); iconOpen.classList.add('block');
+                    iconClose.classList.add('hidden'); iconClose.classList.remove('block');
+                    menuOpen = false; mobileMenuButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+
+        // Sæt nuværende år i footer
+        const currentYearElement = document.getElementById('currentYear');
+        if (currentYearElement) currentYearElement.textContent = new Date().getFullYear();
+
+        // Opdater aktivt navigationslink baseret på scroll position
+        const sectionsForNavUpdate = document.querySelectorAll('#main-content-container section[id], header[id]'); // Inkluder header for "Forside"
+        const navLinksDesktop = document.querySelectorAll('#desktopMenu a');
+        const navLinksMobile = document.querySelectorAll('#mobileMenu a');
+        const navHeight = document.querySelector('nav') ? document.querySelector('nav').offsetHeight : 70; // Fallback nav højde
+
+        function updateActiveLink() {
+            let current = 'forside'; // Standard sektion
+            const scrollPosition = window.pageYOffset + navHeight + 100; // Juster offset for bedre timing
+
+            // Håndter specielle sider først
+            if (!foraeldreDybdegaaendeSektion.classList.contains('hidden')) {
+                current = 'for-foraeldre'; // Hvis forældre dybdegående er aktiv
+            } else if (!spilDetaljeVisningSektion.classList.contains('hidden')) {
+                current = 'spilbibliotek'; // Hvis spil detalje er aktiv
+            } else {
+                // Ellers, find den aktuelle sektion på hovedsiden
+                let foundSection = false;
+                sectionsForNavUpdate.forEach(section => {
+                    // Tjek om sektionen er synlig (har en offsetParent) og inden for viewport
+                    if (section.offsetParent !== null && section.offsetTop <= scrollPosition && (section.offsetTop + section.offsetHeight) > scrollPosition) {
+                        current = section.getAttribute('id');
+                        foundSection = true;
+                    }
+                });
+                 // Hvis ingen sektion er fundet (f.eks. helt i toppen før "om-projektet"), sæt til forside
+                 if (!foundSection && window.pageYOffset < (document.getElementById('om-projektet') ? document.getElementById('om-projektet').offsetTop - navHeight - 50 : 200) ) {
+                    current = 'forside';
+                 }
+            }
+
+            // Opdater desktop links
+            navLinksDesktop.forEach(link => {
+                link.classList.remove('active', 'bg-blue-600', 'text-white'); // Fjern aktive klasser
+                link.classList.add('text-gray-700'); // Standard tekstfarve
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active', 'bg-blue-600', 'text-white');
+                    link.classList.remove('text-gray-700');
+                }
+            });
+            // Opdater mobil links
+            navLinksMobile.forEach(link => {
+                link.classList.remove('active', 'bg-blue-600', 'text-white'); // Fjern aktive klasser
+                link.classList.add('text-gray-700', 'hover:bg-blue-500', 'hover:text-white'); // Standard
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active', 'bg-blue-600', 'text-white');
+                    link.classList.remove('text-gray-700', 'hover:bg-blue-500');
+                }
+            });
+        }
+
+        // Lyt efter scroll og load events for at opdatere aktivt link
+        window.addEventListener('scroll', updateActiveLink);
+        window.addEventListener('load', () => {
+            genererSpilKort(); // Generer spilkort når siden er loaded
+            const currentHash = window.location.hash;
+            if (currentHash.startsWith('#spil-detalje-')) { // Hvis URL indeholder spil-detalje hash
+                const spilId = currentHash.substring('#spil-detalje-'.length);
+                visSpilDetaljer(spilId);
+            } else if (currentHash === '#foraeldre-dybdegaaende') { // Hvis URL indeholder foraeldre-dybdegaaende hash
+                showDetailedParentPage();
+            } else { // Ellers vis hovedsiden (med evt. scroll til hash)
+                showMainContentPage(currentHash ? currentHash.substring(1) : 'forside');
+            }
+            updateActiveLink(); // Sørg for at det korrekte link er aktivt ved load
+        });
+        window.addEventListener('resize', updateActiveLink); // Opdater også ved resize
+    </script>
+</body>
+</html>
